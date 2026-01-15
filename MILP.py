@@ -31,21 +31,19 @@ class MILP_Algo:
             # run_name="MILP_Run",
             run_name="______",
             qk=[  # Barge capacities in TEU
-                100,         # Barge 0
-                60,         # Barge 1
-                40,         # Barge 2
-                20,         # Barge 3
+                150,        # Barge 0
+                100,        # Barge 1
+                50,         # Barge 2
             ],
             h_b=[  # Barge fixed costs in euros
-                4000,      # Barge 0
-                3200,      # Barge 1
-                1800,      # Barge 0
-                1000,      # Barge 1
+                3000,      # Barge 0
+                2500,      # Barge 1
+                1500,      # Barge 2
             ],
             seed=0,               # Random seed for reproducibility
             reduced=False,
-            h_t_40=200e3,                 # 40ft container trucking cost in euros
-            h_t_20=140e3,                 # 20ft container trucking cost in euros
+            h_t_40=500,                 # 40ft container trucking cost in euros
+            h_t_20=300,                 # 20ft container trucking cost in euros
             handling_time=1/6,              # Container handling time in hours
             C_range=(150, 175),              # (min, max) number of containers when reduced=False
             N_range=(20, 20),                 # (min, max) number of terminals when reduced=False
@@ -60,8 +58,8 @@ class MILP_Algo:
 
             P40_range=(0.2, 0.22),              # (min, max) probability of 40ft container
             PExport_range=(0.05, 0.75),         # (min, max) probability of export
-            C_range_reduced=(100, 100),           # (min, max) containers when reduced=True
-            N_range_reduced=(7, 7),             # (min, max) terminals when reduced=True
+            C_range_reduced=(80, 80),           # (min, max) containers when reduced=True
+            N_range_reduced=(4, 4),             # (min, max) terminals when reduced=True
             gamma=100,                          # penalty per sea terminal visit [euros]
             big_m=1000                          # big-M
     ):
