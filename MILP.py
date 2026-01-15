@@ -7,6 +7,7 @@ Requires Gurobi (gurobipy) with a valid license.
 """
 
 import os
+import sys
 import toml
 from datetime import datetime
 import random
@@ -2704,6 +2705,61 @@ class MILP_Algo:
                 # self.plot_barge_specific_split_timelines(margin_hours=3.0)
                 
 
+    def plot_terminals_map_only(self):
+        """
+        Plots the map of terminals without running the optimization algorithm.
+        Based on plot_barge_solution_map_report_3 but without barges.
+        """
+        # Ensure coordinates exist
+        if not hasattr(self, 'node_xy') or not self.node_xy:
+            print("No coordinates found. Generating default travel times...")
+            self.generate_travel_times_fazi_case_study()
+
+        node_xy = self.node_xy
+        N = self.N_list
+
+        # Prepare figure
+        fig, ax = plt.subplots(figsize=(12, 8))
+        fig.patch.set_facecolor("white")
+        ax.set_facecolor("white")
+
+        # Draw nodes
+        for j in N:
+            x, y = node_xy[j]
+
+            if j == 0:
+                # Dryport = solid square
+                ax.scatter(
+                    x, y, s=800, marker="s",
+                    facecolor="white", edgecolor="black",
+                    zorder=4,
+                )
+            else:
+                ax.scatter(
+                    x, y, s=400,
+                    facecolor="white", edgecolor="black",
+                    linewidth=1.2, zorder=3
+                )
+
+            ax.text(
+                x, y, f"{j}",
+                ha="center", va="center",
+                fontsize=9, color="black", zorder=5
+            )
+
+        # Styling
+        ax.set_aspect("equal", adjustable="datalim")
+        ax.set_xticks([])
+        ax.set_yticks([])
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+
+        outfile = f"Storage_orig/Figures/terminals_map_{self.file_name}.pdf"
+        plt.tight_layout()
+        plt.savefig(outfile)
+        print(f"Terminals map saved to: {outfile}")
+
+
 class ContainerPlotter:
     """
     Minimal wrapper class for draw_container() and draw_capacity().
@@ -2843,8 +2899,14 @@ class ContainerPlotter:
 # Optional quick test if you run MILP.py directly:
 if __name__ == "__main__":
     print("\n\n\n\n\n\n\n\n\n\n\n")
-    milp = MILP_Algo(reduced=True)   # e.g. smaller instances
-    # milp.generate_travel_times_fazi_case_study()
-    # milp.plot_topography_preview()
-    milp.run(with_plots=True)
+
+    # Check for flag
+    if len(sys.argv) > 1 and sys.argv[1] == "--plot-map":
+        milp = MILP_Algo(reduced=True)
+        milp.plot_terminals_map_only()
+    else:
+        milp = MILP_Algo(reduced=True)   # e.g. smaller instances
+        # milp.generate_travel_times_fazi_case_study()
+        # milp.plot_topography_preview()
+        milp.run(with_plots=True)
 
