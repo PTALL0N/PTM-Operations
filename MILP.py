@@ -544,7 +544,9 @@ class MILP_Algo:
         """Create Gurobi model and decision variables."""
         self.model = Model("BargeScheduling")
 
-        self.model.Params.MIPFocus = 1   # focus on improving feasible solutions quickly
+        # self.model.Params.MIPFocus = 1   # focus on improving feasible solutions quickly
+        self.model.Params.MIPFocus = 2 # Optimality focus (improve best bound)
+
         # Options:
         # 0 = balanced (default)
         # 1 = feasibility
@@ -552,6 +554,9 @@ class MILP_Algo:
         # 3 = bound improvement
 
         # --------------- Gurobi configuration ---------------
+
+        self.model.Params.Cuts = 2 # Aggressive cuts
+        self.model.Params.Presolve = 2 # Aggressive presolve
 
 
         # Log file with timestamp to avoid overwriting
